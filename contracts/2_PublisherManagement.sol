@@ -12,7 +12,9 @@ contract PublisherManagement {
         string description;
         string authorName;
         uint price;
+        bool isRented; 
     }
+
 
     mapping(address => Publisher) public publishers;
 
@@ -69,9 +71,11 @@ contract PublisherManagement {
         Book storage book = publishers[_publisherAddress].books[_bookId];
         return (book.name, book.description, book.authorName, book.price);
     }
+    // Inside PublisherManagement.sol
 
-    function getPublisherName(address _publisherAddress) public view returns (string memory) {
-    return publishers[_publisherAddress].name;
-}
+    function updateBookAvailability(address _publisherAddress, uint _bookId, bool _isRented) public {
+        require(msg.sender == _publisherAddress, "Unauthorized to update book availability");
+        publishers[_publisherAddress].books[_bookId].isRented = _isRented;
+    }
 
 }

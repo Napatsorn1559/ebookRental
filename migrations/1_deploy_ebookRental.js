@@ -1,10 +1,22 @@
-const PaymentSystem = artifacts.require("PaymentSystem");
-const PublisherManagement = artifacts.require("PublisherManagement");
 const UserRegistration = artifacts.require("UserRegistration");
+const PublisherManagement = artifacts.require("PublisherManagement");
+const PaymentSystem = artifacts.require("PaymentSystem");
+const EbookRental = artifacts.require("EbookRental");
 
-module.exports = function (deployer) {
-  deployer.deploy( PaymentSystem );
-  deployer.deploy( PublisherManagement );
-  deployer.deploy( UserRegistration );
-  // deployer.link(PaymentSystem, PublisherManagement);
+module.exports = async function (deployer, network, accounts) {
+  // Deploy UserRegistration
+  await deployer.deploy(UserRegistration);
+  const userRegistrationInstance = await UserRegistration.deployed();
+
+  // Deploy PublisherManagement
+  await deployer.deploy(PublisherManagement);
+  const publisherManagementInstance = await PublisherManagement.deployed();
+
+  // Deploy PaymentSystem
+  await deployer.deploy(PaymentSystem);
+  const paymentSystemInstance = await PaymentSystem.deployed();
+
+  // Link and deploy EbookRental
+  await deployer.deploy(EbookRental, UserRegistration.address, PublisherManagement.address, PaymentSystem.address);
+
 };

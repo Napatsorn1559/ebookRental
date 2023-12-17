@@ -1,11 +1,19 @@
 import configurationPub from '../build/contracts/PublisherManagement.json'
 import configuration from '../build/contracts/UserRegistration.json';
+import configurationRent from '../build/contracts/EbookRental.json';
+import configurationPayment from '../build/contracts/PaymentSystem.json';
 
 const address = configuration.networks['5777'].address;
 const abi = configuration.abi;
 
 const pubAddress = configurationPub.networks['5777'].address;
-const pubAbi = configurationPub.abi
+const pubAbi = configurationPub.abi;
+
+const rentAddress = configurationRent.networks['5777'].address;
+const rentAbi = configurationRent.abi;
+
+const payAddress = configurationPayment.networks['5777'].address;
+const payAbi = configurationPayment.abi;
 
 document.addEventListener("DOMContentLoaded", function (event) {
     if (window.ethereum) {
@@ -39,9 +47,12 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
         const provider = new ethers.providers.Web3Provider(window.ethereum, "any");
         const signer = provider.getSigner();
-        const UserRegistrationContract = new ethers.Contract(address, abi, signer);
 
+        const UserRegistrationContract = new ethers.Contract(address, abi, signer);
         const PublisherManagement = new ethers.Contract(pubAddress, pubAbi, signer);
+        const ebookRentalContract = new ethers.Contract(rentAddress, rentAbi, signer);
+        const PaymentContract = new ethers.Contract(payAddress, payAbi, signer);
+
 
 //============================================================================================================
 
@@ -50,16 +61,45 @@ document.addEventListener("DOMContentLoaded", function (event) {
             document.getElementById('tokenPrice').addEventListener('click', async () => {
                 const response = await ethereum.request({ method: "eth_requestAccounts" });
                 const accounts = response[0];
+                const publisher = '0x1209cBDa74A9CE28936a61195AeE83Bf22b103B8';
+                const bid = 1;
+                // await PublisherManagement.addBookList(1, "Book1", "Description", "Author", 100, { from: publisher });
 
                 const user = await UserRegistrationContract.users(accounts);
-                console.log('from users -> ', user.isRegistered);
+                console.log('from users -> ', user);
 
-                if (!user.isRegistered) {
-                    window.location.href = "./register.html"
+                const isUserRegistered = await UserRegistrationContract.checkIsRegistered({ from: accounts });
+                console.log('from isUserRegistered -> ', isUserRegistered);
+
+                // UserRegistrationContract.checkIsRegistered({ from: accounts })
+                //     .then(() => { ebookRentalContract.rentBook( bid,publisher, { from: accounts })})
+                //     .catch((error)=> console.log('rent error: ', error))
+                if (!isUserRegistered) {
+                    // window.location.href = "./register.html";
                 } else {
-                    console.log(user.isRegistered);
-                    window.location.href = "./log_in.html"
+                    console.log(isUserRegistered);
+                    // window.location.href = "./log_in.html"
+                    let demoBookid = 1;
+                    const renting = async (bid,publisher,acc) => {
+                        try {
+                            console.log('acc', acc);
+                            const doRenting = await ebookRentalContract.rentBook(bid,publisher, { from: acc });
+                            console.log('Renting result:', doRenting);
+                            // Handle success
+                        } catch (error) {
+                            if (error.message.includes("User is not registered")) {
+                                console.error("User is not registered");
+                                // Handle the case where the user is not registered
+                            } else {
+                                console.error('Renting failed:', error.message);
+                                // Handle other errors
+                            }
+                        }
+                    }
+        
+                    renting(demoBookid,publisher,accounts);
                 }
+
             })
 
             document.getElementById('profileBtn').addEventListener('click', async () => {

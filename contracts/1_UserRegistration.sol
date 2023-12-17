@@ -1,3 +1,4 @@
+
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
@@ -8,21 +9,13 @@ contract UserRegistration {
         bool isRegistered;
         string username;
         string email;
-        string passwordHash; // Use this to store the hashed version of the password
+        string passwordHash;
     }
 
     mapping(address => User) public users;
 
-    event UserRegistered(
-        address indexed userAddress,
-        string username,
-        string email
-    );
-    event UserProfileUpdated(
-        address indexed userAddress,
-        string newUsername,
-        string newEmail
-    );
+    event UserRegistered(address indexed userAddress, string username, string email);
+    event UserProfileUpdated(address indexed userAddress, string newUsername, string newEmail);
 
     modifier onlyOwner() {
         require(msg.sender == owner, "Only the owner can call this function");
@@ -34,15 +27,19 @@ contract UserRegistration {
         _;
     }
 
+    // Declare the checkIsRegistered function
+    function checkIsRegistered() public view returns (bool) {
+        return users[msg.sender].isRegistered;
+    }
+
     modifier isRegistered() {
-        require(users[msg.sender].isRegistered, "User is not registered");
+        require(checkIsRegistered(), "User is not registered");
         _;
     }
 
     modifier verifyPassword(string memory _password) {
         require(
-            sha256(abi.encodePacked(_password)) ==
-                sha256(abi.encodePacked(users[msg.sender].passwordHash)),
+            sha256(abi.encodePacked(_password)) == sha256(abi.encodePacked(users[msg.sender].passwordHash)),
             "Incorrect password"
         );
         _;
@@ -59,10 +56,7 @@ contract UserRegistration {
     ) external notRegistered {
         require(bytes(_username).length > 0, "Username cannot be empty");
         require(bytes(_email).length > 0, "Email cannot be empty");
-        require(
-            bytes(_passwordHash).length > 0,
-            "Password hash cannot be empty"
-        );
+        require(bytes(_passwordHash).length > 0, "Password hash cannot be empty");
 
         users[msg.sender] = User({
             isRegistered: true,
@@ -87,15 +81,5 @@ contract UserRegistration {
 
         emit UserProfileUpdated(msg.sender, _newUsername, _newEmail);
     }
-
-    function isUserRegistered(
-        address userAddress
-    ) external view returns (bool) {
-        return users[userAddress].isRegistered;
-    }
-
-    function getUserName(address _userAddress) public view returns (string memory) {
-    return users[_userAddress].username;
 }
 
-}
