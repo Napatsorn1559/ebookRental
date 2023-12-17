@@ -6,7 +6,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/stylesheet.727f2e5c.css">
-
+    <script type="module" src="/client.e31bb0bc.js"></script>
+    <script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js" type="application/javascript"></script>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
@@ -15,10 +16,10 @@
             /* Set your desired gray color */
         }</style>
     <title>ebookRental</title>
-<script src="/stylesheet.727f2e5c.js"></script><script src="/shelf.js"></script></head>
+</head>
 
 <body>
-    <div class="container-full">
+    <div class="container-full" id="indexPage">
         <div class="container">
             <div id="topBar" class="d-flex align-items-center justify-content-center">
                 <div id="logo">
@@ -42,7 +43,7 @@
 
                         <div class="d-flex align-items-center ">
                             <div id="profileBtn" class="p-2">
-                                <a href="/shelf.html"><img src="/profileButton.57b3c003.png" height="38px"></a>
+                                <img src="/profileButton.57b3c003.png" height="38px">
                             </div>
                         </div>
 
@@ -82,7 +83,7 @@
                             <p class="bookName d-flex justify-content-center align-items-center">prince of tennis vol.1
                             </p>
                             <div id="tokenPrice" class="d-flex flex-row justify-content-center ">
-                                <img src="/Group 10.6bcb7e43.png" height="30px">
+                                <img src="/Group 10.6bcb7e43.png" height="30px" class="bookPrice">
                                 <p class="fw-bold text-success px-1">10</p>
                             </div>
                         </div>
@@ -94,7 +95,6 @@
     </div>
     
 
-    <script src="/client.e31bb0bc.js"></script>
     <!-- Bootstrap JS Bundle (Popper.js + Bootstrap JS) -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.10.2/umd/popper.min.js"></script>
@@ -138,3 +138,17 @@
 </footer>
 
 </html>
+
+<!-- <div class="modal" style="display: none;">
+    <div id="myModal" class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title"></h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+            </div>
+            
+        </div>
+    </div>
+</div> -->

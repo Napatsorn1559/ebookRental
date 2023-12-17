@@ -7,6 +7,7 @@ contract("PublisherManagement", accounts => {
         instance = await PublisherManagement.new();
     });
 
+
     it("should register a publisher", async () => {
         const name = "Test Publisher";
         const contactDetails = "test@example.com";
@@ -17,6 +18,10 @@ contract("PublisherManagement", accounts => {
         assert.equal(publisher.name, name, "Publisher name not match");
         assert.equal(publisher.contactDetails, contactDetails,  "Publisher contact detail not match");
     });
+
+    // it("show get listof publisher name", async () => {
+    //     await instance.getPublisherName(accounts[0]);
+    // })
 
     it("should add an book list", async () => {
         const name = "Test Publisher";

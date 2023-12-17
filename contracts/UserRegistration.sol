@@ -3,7 +3,7 @@ pragma solidity ^0.8.0;
 
 contract UserRegistration {
     address public owner;
-    
+
     struct User {
         bool isRegistered;
         string username;
@@ -13,8 +13,16 @@ contract UserRegistration {
 
     mapping(address => User) public users;
 
-    event UserRegistered(address indexed userAddress, string username, string email);
-    event UserProfileUpdated(address indexed userAddress, string newUsername, string newEmail);
+    event UserRegistered(
+        address indexed userAddress,
+        string username,
+        string email
+    );
+    event UserProfileUpdated(
+        address indexed userAddress,
+        string newUsername,
+        string newEmail
+    );
 
     modifier onlyOwner() {
         require(msg.sender == owner, "Only the owner can call this function");
@@ -33,7 +41,8 @@ contract UserRegistration {
 
     modifier verifyPassword(string memory _password) {
         require(
-            sha256(abi.encodePacked(_password)) == sha256(abi.encodePacked(users[msg.sender].passwordHash)),
+            sha256(abi.encodePacked(_password)) ==
+                sha256(abi.encodePacked(users[msg.sender].passwordHash)),
             "Incorrect password"
         );
         _;
@@ -43,10 +52,17 @@ contract UserRegistration {
         owner = msg.sender;
     }
 
-    function registerUser(string memory _username, string memory _email, string memory _passwordHash) external notRegistered {
+    function registerUser(
+        string memory _username,
+        string memory _email,
+        string memory _passwordHash
+    ) external notRegistered {
         require(bytes(_username).length > 0, "Username cannot be empty");
         require(bytes(_email).length > 0, "Email cannot be empty");
-        require(bytes(_passwordHash).length > 0, "Password hash cannot be empty");
+        require(
+            bytes(_passwordHash).length > 0,
+            "Password hash cannot be empty"
+        );
 
         users[msg.sender] = User({
             isRegistered: true,
@@ -58,7 +74,11 @@ contract UserRegistration {
         emit UserRegistered(msg.sender, _username, _email);
     }
 
-    function updateProfile(string memory _newUsername, string memory _newEmail, string memory _password) external isRegistered verifyPassword(_password) {
+    function updateProfile(
+        string memory _newUsername,
+        string memory _newEmail,
+        string memory _password
+    ) external isRegistered verifyPassword(_password) {
         require(bytes(_newUsername).length > 0, "New username cannot be empty");
         require(bytes(_newEmail).length > 0, "New email cannot be empty");
 
@@ -67,5 +87,15 @@ contract UserRegistration {
 
         emit UserProfileUpdated(msg.sender, _newUsername, _newEmail);
     }
+
+    function isUserRegistered(
+        address userAddress
+    ) external view returns (bool) {
+        return users[userAddress].isRegistered;
+    }
+
+    function getUserName(address _userAddress) public view returns (string memory) {
+    return users[_userAddress].username;
+}
 
 }
